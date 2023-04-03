@@ -1,29 +1,41 @@
 import React, { Component } from "react";
 
-import { Header, SearchForm, SearchFormBtn, SearchFormInput } from './Searchbar.styled';
+import {
+    Header,
+    SearchForm,
+    SearchFormBtn,
+    SearchFormInput,
+    SearchFormButtonLabel
+} from './Searchbar.styled';
 
 export class Searchbar extends Component {
     state = {
-        value: '',
+        nameSearch: '',
     };
 
-    // handleChange = (e) => {
-    //     this.setState({ value: e.target.value })
+    handleChange = (e) => {
+        this.setState({ nameSearch: e.target.value.toLowerCase() });
+
+    }
+
+    // handleChange = ({ target: { value } }) => {
+    //     this.setState({ value })
     //     // console.log(e.target.value)
     // }
 
-    handleChange = ({ target: { value } }) => {
-        this.setState({ value })
-        // console.log(e.target.value)
-    }
-
     handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        if (this.state.nameSearch.trim() === '') {
+            alert(`введите имя поиска`);
+            return;
+        }
+
+        this.props.onSubmit(this.state.nameSearch);
+        this.setState({ nameSearch: '' });
     }
 
     render() {
 
-        // console.log(this.State.value)
         return (
             <Header >
                 <SearchForm
@@ -31,16 +43,16 @@ export class Searchbar extends Component {
 
                 >
                     <SearchFormBtn type="submit" >
-                        <span className="button-label">Search</span>
+                        <SearchFormButtonLabel>Search</SearchFormButtonLabel>
                     </SearchFormBtn>
 
                     <SearchFormInput
                         type="text"
-                        // autocomplete="off"
+                        autocomplete="off"
                         // autofocus
                         placeholder="Search images and photos"
                         onChange={this.handleChange}
-                        value={this.state.value}
+                        value={this.state.nameSearch}
                     />
                 </SearchForm>
             </Header >
