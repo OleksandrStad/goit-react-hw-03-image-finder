@@ -4,6 +4,7 @@ import { InfinitySpin } from 'react-loader-spinner';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { BtnLoadMore } from './Button/Button'
+import { Modal } from './Modal/Modal'
 
 
 export class App extends Component {
@@ -12,10 +13,10 @@ export class App extends Component {
     nameSearch: '',
     isLoading: false,
     page: 1,
+    urlPreviewImage: '',
   }
 
   componentDidUpdate(_, prevState) {
-    console.log(this.state.images)
 
     if (prevState.nameSearch !== this.state.nameSearch) {
 
@@ -28,10 +29,7 @@ export class App extends Component {
         .finally(() => {
           this.setState({ isLoading: false })
         });
-
     }
-
-
 
     if (prevState.page < this.state.page) {
       getImages(this.state.nameSearch, this.state.page)
@@ -40,44 +38,39 @@ export class App extends Component {
         .catch(error => console.log(error))
         .finally(() => {
           this.setState({ isLoading: false })
-        });
-    }
-
+        })
+    };
   };
-
-
-
 
   onLoadMore = () => {
     this.setState((prev) => {
       return {
-        page: prev.page + 1,
+        page: prev.page + 1
       };
-    });
-  }
-
-
-
-
+    })
+  };
 
   handleChangeSubmit = nameSearch => {
-    // console.log(nameSearch)
     this.setState({
       nameSearch: nameSearch,
       page: 1
-    });
+    })
+  };
 
-  }
+  openModal = url => {
+    this.setState({ urlPreviewImage: url });
+  };
 
-
+  closeModal = () => {
+    this.setState({ urlPreviewImage: '' });
+  };
 
   render() {
-    const { images, isLoading } = this.state
+    const { images, isLoading, urlPreviewImage } = this.state
 
     return (
       <>
         <Searchbar onSubmit={this.handleChangeSubmit} />
-
 
         {isLoading && (
           <div
@@ -91,16 +84,15 @@ export class App extends Component {
           </div>
         )}
 
-        < ImageGallery images={images} />
+        < ImageGallery images={images} openModal={this.openModal} />
 
         {images.length !== 0 &&
           (<BtnLoadMore handlerClick={this.onLoadMore} />)
         }
 
-
+        {urlPreviewImage && <Modal closeModal={this.closeModal} showModal={urlPreviewImage} />}
 
       </>
     );
   };
-
 };
