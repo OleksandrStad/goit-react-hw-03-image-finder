@@ -17,7 +17,7 @@ export class App extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-
+    console.log(this.state.images)
     if (prevState.nameSearch !== this.state.nameSearch) {
 
       this.setState({ isLoading: true });
@@ -30,6 +30,8 @@ export class App extends Component {
           this.setState({ isLoading: false })
         });
     }
+
+    console.log(this.state.images)
 
     if (prevState.page < this.state.page) {
       getImages(this.state.nameSearch, this.state.page)
@@ -49,6 +51,8 @@ export class App extends Component {
       };
     })
   };
+
+
 
   handleChangeSubmit = nameSearch => {
     this.setState({
@@ -86,7 +90,7 @@ export class App extends Component {
 
         < ImageGallery images={images} openModal={this.openModal} />
 
-        {images.length !== 0 &&
+        {images.length === 12 &&
           (<BtnLoadMore handlerClick={this.onLoadMore} />)
         }
 
